@@ -20,9 +20,14 @@ public class MainActivity extends AppCompatActivity {
     private Double operand2 = null;
     private String pendingOperation = "=";
 
+    private static final String STATE_PENDING_OPERATION = "PendingOperation";
+    private static final String STATE_OPERAND1 = "Operand1";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_main);
 
         result = (EditText) findViewById(R.id.result);
@@ -46,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         Button buttonMultiply = findViewById(R.id.buttonMultiply);
         Button buttonMinus = findViewById(R.id.buttonMinus);
         Button buttonPlus = findViewById(R.id.buttonPlus);
+        Button buttonNeg = findViewById(R.id.buttonNeg);
 
         /** When a button is tapped and the android framework calls the onClick method, it passes it a reference to the button that was tapped.
          Not all views can have text, so before we can call the getText method we have to cast it to a widget that does have the getText method. **/
@@ -97,6 +103,26 @@ public class MainActivity extends AppCompatActivity {
         buttonMultiply.setOnClickListener(opListener);
         buttonMinus.setOnClickListener(opListener);
         buttonPlus.setOnClickListener(opListener);
+
+
+    }
+
+    // Override method to save the operator value when screen is rotated
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString(STATE_PENDING_OPERATION, pendingOperation);
+        if (operand1 != null){
+            outState.putDouble(STATE_OPERAND1, operand1);
+        }
+        super.onSaveInstanceState(outState);
+    }
+    //Override method to restore the value when screen is rotated.
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        pendingOperation = savedInstanceState.getString(STATE_PENDING_OPERATION);
+        operand1 = savedInstanceState.getDouble(STATE_OPERAND1);
+        displayOperation.setText(pendingOperation);
     }
 
     public void performOperation(Double value, String operation) { // initially first value was string, but changed to Double because when using the dot first it would crash the app
@@ -134,5 +160,11 @@ public class MainActivity extends AppCompatActivity {
 
         result.setText(operand1.toString());
         newNumber.setText("");
+
+
+
+
     }
+
+
 }

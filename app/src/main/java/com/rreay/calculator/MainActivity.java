@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
         Button buttonMultiply = findViewById(R.id.buttonMultiply);
         Button buttonMinus = findViewById(R.id.buttonMinus);
         Button buttonPlus = findViewById(R.id.buttonPlus);
-        Button buttonNeg = findViewById(R.id.buttonNeg);
 
         /** When a button is tapped and the android framework calls the onClick method, it passes it a reference to the button that was tapped.
          Not all views can have text, so before we can call the getText method we have to cast it to a widget that does have the getText method. **/
@@ -103,6 +102,43 @@ public class MainActivity extends AppCompatActivity {
         buttonMultiply.setOnClickListener(opListener);
         buttonMinus.setOnClickListener(opListener);
         buttonPlus.setOnClickListener(opListener);
+
+        Button buttonNeg = findViewById(R.id.buttonNeg);
+        buttonNeg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String value = newNumber.getText().toString();
+                if(value.length() == 0){
+                    newNumber.setText("-");
+                }else{
+                    try{
+                        Double doubleValue = Double.valueOf(value);
+                        doubleValue *= -1;  // this will set it to the number multiplied by negative 1
+                        newNumber.setText(doubleValue.toString());
+                    }catch (NumberFormatException e) {
+                        // newNumber was "-" or ".", so clear it
+                        newNumber.setText("");
+                    }
+                }
+
+            }
+        });
+
+        Button buttonClear = findViewById(R.id.buttonClear);
+        buttonClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String value = newNumber.getText().toString();
+                newNumber.setText("");
+                if(value.length() == 0){
+                    if (pendingOperation.length() != 0) {
+                        result.setText("");
+                        operand1 = null;
+                        displayOperation.setText("");
+                    }
+                }
+            }
+        });
 
 
     }
